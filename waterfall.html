@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+    <script src="tools.js"></script>
+    <link rel="stylesheet" href="waterfall.css">
+</head>
+<body>
+    <div class='Wrapper'>
+        <div class='float-left' id='pic1'></div>
+        <div class='float-left' id='pic2'></div>
+        <div class='float-left' id='pic3'></div>
+        <div class='float-left' id='pic4'></div>
+        <button id='btn'>更多图片</button>
+    </div>
+    <script type="text/javascript">
+        var btn = document.getElementById('btn');
+        var i = 1;
+
+        var pic1 = document.getElementById('pic1');
+        var pic2 = document.getElementById('pic2');
+        var pic3 = document.getElementById('pic3');
+        var pic4 = document.getElementById('pic4');
+        var oDiv = [pic1, pic2, pic3, pic4];
+
+
+        btn.onclick = function () {
+            Ajax('POST', 'getPics.php', true, cpage=i, function (data) {
+                data = JSON.parse(data);
+                console.log(data);
+                var Dlen = data.length;
+                for(var j = 0; j < Dlen; j++) {
+                    addPic(data)
+                }
+                i++;
+                var j = 0;
+                function addPic(data) {
+                    var img = document.createElement('img');
+                    // img.style.height = parseInt(data[j].height) + 'px';
+                    img.src = data[j].image;
+                    addWho().appendChild(img)
+                    j++;
+                }
+            })
+        }
+
+        function addWho() {
+            var min = oDiv[0].clientHeight;
+            var minI = 0;
+            var len = oDiv.length;
+            for (var i = 1; i < len; i++){
+                if (oDiv[i].clientHeight < min){
+                    min = oDiv[i].clientHeight;
+                    minI = i;
+                }
+            }
+            // console.log(minI)
+            return oDiv[minI];
+        }
+
+    </script>
+</body>
+</html>
